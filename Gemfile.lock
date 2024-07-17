@@ -35,6 +35,7 @@ PLATFORMS
 
 DEPENDENCIES
   glimmer-dsl-libui (~> 0.5.24)
+  os (~> 1.1)
 
 BUNDLED WITH
    2.5.15
