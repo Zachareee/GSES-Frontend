@@ -96,6 +96,7 @@ class NativeDialog
 
   def flags(flag)
     @instance.Flags = flag
+    self
   end
 
   def open_file?
