@@ -7,9 +7,9 @@ require_relative 'win_api'
 
 # Frontend
 class GUI
-  include Glimmer
+  include Glimmer::LibUI::Application
 
-  def launch
+  body do
     window_menu
     window('GSES Frontend', 900, 600) do
       display_games
@@ -20,7 +20,7 @@ class GUI
     menu 'Games' do
       menu_item 'Add game' do
         on_clicked do
-          AddGame.new
+          AddGame.launch
         end
       end
     end
@@ -38,11 +38,11 @@ end
 
 # Popup window when "Add Game" is clicked
 class AddGame
-  include Glimmer
+  include Glimmer::LibUI::Application
   include NativeDialog::Flags
   attr_accessor :file
 
-  def initialize
+  body do
     window('Add game', 600, 400) do |child|
       vertical_box do
         customform
@@ -85,4 +85,4 @@ class AddGame
   end
 end
 
-GUI.new.launch
+GUI.launch
