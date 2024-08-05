@@ -98,11 +98,11 @@ class NativeDialog
     @instance.Flags = flag
   end
 
-  def open_file
+  def open_file?
     Win::FileOpen.GetOpenFileNameA @instance
   end
 
   def selected_file
-    @instance.lpstrFile
+    @instance.lpstrFile.to_s
   end
 end
