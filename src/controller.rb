@@ -2,7 +2,7 @@
 
 # Backend
 class Controller
-  @games = [['A game name']]
+  @games = []
   def self.load_games
     @games
   end
@@ -10,5 +10,9 @@ class Controller
   # game = [image, game name, path]
   def self.save_game(gameinfo)
     @games.push(gameinfo)
+  end
+
+  def self.run_game idx
+    `#{@games[idx][0]}`
   end
 end

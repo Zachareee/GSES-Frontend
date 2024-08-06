@@ -2,7 +2,7 @@
 
 require 'glimmer-dsl-libui'
 
-require_relative './controller'
+require_relative 'controller'
 require_relative 'win_api'
 
 # Frontend
@@ -13,7 +13,7 @@ class GUI
     window_menu
     window('GSES Frontend', 900, 600) do
       display_games
-    end.show
+    end
   end
 
   def window_menu
@@ -32,6 +32,10 @@ class GUI
       text_column 'Game name'
 
       cell_rows Controller.load_games
+
+      on_row_double_clicked do |t, row|
+        Controller.run_game row
+      end
     end
   end
 end
@@ -53,7 +57,7 @@ class AddGame
           end
         end
       end
-    end.show
+    end
   end
 
   def customform
