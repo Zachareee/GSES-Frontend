@@ -8,6 +8,7 @@ require_relative 'win_api'
 # Frontend
 class GUI
   include Glimmer::LibUI::Application
+  attr_accessor :selected
 
   body do
     window_menu
@@ -30,7 +31,7 @@ class GUI
       end
       menu_item 'Remove' do
         on_clicked do
-          Controller.delete_game @selection
+          Controller.delete_game @selected
         end
       end
     end
@@ -44,7 +45,7 @@ class GUI
 
       cell_rows Controller.load_games
 
-      selection <=> [self, :selection]
+      selection <=> [self, :selected]
       on_row_double_clicked do |t, row|
         Controller.run_game row
       end
@@ -56,6 +57,7 @@ end
 class AddGame
   include Glimmer::LibUI::Application
   include NativeDialog::Flags
+  attr_accessor :file, :name
 
   body do
     window('Add game', 600, 400) do |child|
@@ -73,7 +75,7 @@ class AddGame
 
   def customform
     form do
-      name = formbox 'Game name', :name
+      formbox 'Game name', :name
       horizontal_box do
         file = formbox 'Filename', :file
         button 'Browse' do
