@@ -22,10 +22,15 @@ class GUI
   end
 
   def window_menu
-    menu 'Games' do
-      menu_item 'Add game' do
+    menu 'File' do
+      menu_item 'Add' do
         on_clicked do
           AddGame.launch
+        end
+      end
+      menu_item 'Remove' do
+        on_clicked do
+          Controller.delete_game @selection
         end
       end
     end
@@ -35,9 +40,11 @@ class GUI
     table do
       # image_column 'Cover art'
       text_column 'Game name'
+      text_column 'Path'
 
       cell_rows Controller.load_games
 
+      selection <=> [self, :selection]
       on_row_double_clicked do |t, row|
         Controller.run_game row
       end
@@ -49,7 +56,6 @@ end
 class AddGame
   include Glimmer::LibUI::Application
   include NativeDialog::Flags
-  attr_accessor :file
 
   body do
     window('Add game', 600, 400) do |child|
@@ -57,7 +63,7 @@ class AddGame
         customform
         button 'Accept' do
           on_clicked do
-            Controller.save_game [@file] unless @file.nil?
+            Controller.save_game [@name, @file] unless @file.nil?
             child.destroy
           end
         end
@@ -67,6 +73,7 @@ class AddGame
 
   def customform
     form do
+      name = formbox 'Game name', :name
       horizontal_box do
         file = formbox 'Filename', :file
         button 'Browse' do

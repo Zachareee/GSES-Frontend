@@ -17,12 +17,16 @@ class Controller
     @games.push(gameinfo)
   end
 
+  def self.delete_game idx
+    @games.delete_at idx
+  end
+
   def self.shutdown
     FileUtils.mkdir_p APPDATA_FOLDER unless File.directory? APPDATA_FOLDER
     File.write CONFIG_FILE, @games.to_json
   end
 
   def self.run_game idx
-    `#{@games[idx][0]}`
+    `#{@games[idx][1]}`
   end
 end
