@@ -13,6 +13,11 @@ class GUI
     window_menu
     window('GSES Frontend', 900, 600) do
       display_games
+
+      on_closing do
+        Controller.shutdown
+        nil
+      end
     end
   end
 
