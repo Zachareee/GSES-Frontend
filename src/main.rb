@@ -4,6 +4,18 @@ require 'glimmer-dsl-libui'
 
 require_relative 'controller'
 require_relative 'win_api'
+require_relative 'window/addgame'
+require_relative 'window/settings'
+
+menubar = {
+  "File" => {
+    "Add" => Proc.new { AddGame.launch },
+    "Remove" => Proc.new { Controller.delete_game }
+  },
+  "Edit" => {
+    "Settings" => Proc.new { Settings.launch }
+  }
+}
 
 # Frontend
 class GUI
@@ -46,60 +58,10 @@ class GUI
       cell_rows Controller.load_games
 
       selection <=> [self, :selected]
-      on_row_double_clicked do |t, row|
+      on_row_double_clicked do |_t, row|
         Controller.run_game row
       end
     end
-  end
-end
-
-# Popup window when "Add Game" is clicked
-class AddGame
-  include Glimmer::LibUI::Application
-  include NativeDialog::Flags
-  attr_accessor :file, :name
-
-  body do
-    window('Add game', 600, 400) do |child|
-      vertical_box do
-        customform
-        button 'Accept' do
-          on_clicked do
-            Controller.save_game [@name, @file] unless @file.nil?
-            child.destroy
-          end
-        end
-      end
-    end
-  end
-
-  def customform
-    form do
-      formbox 'Game name', :name
-      horizontal_box do
-        file = formbox 'Filename', :file
-        button 'Browse' do
-          on_clicked do
-            @file = browse_files
-            file.text = @file unless @file.nil?
-          end
-        end
-      end
-    end
-  end
-
-  def formbox(label, varname)
-    entry do
-      label label
-      text <=> [self, varname]
-    end
-  end
-
-  def browse_files
-    dialog = NativeDialog.new('Choose the exe file of the game')
-                         .filters({ 'Executable files (*.exe)' => '*.exe' })
-                         .flags OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_PATHMUSTEXIST
-    dialog.selected_file if dialog.open_file?
   end
 end
 
