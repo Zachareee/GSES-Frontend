@@ -27,6 +27,7 @@ module Controller
     end
 
     def self.run(idx)
+      puts Settings.settings
       `"#{@games[idx][1]}"` unless @games[idx].nil?
     end
 
@@ -37,8 +38,17 @@ module Controller
 
   # Backend relating to settings
   class Settings
+    def self.settings
+      load
+    end
+
     def self.load
-      return @settings = JSON.parse(File.read(SETTINGS_FILE)) if File.exist?(SETTINGS_FILE)
+      return @settings unless @settings.nil?
+
+      if File.exist?(SETTINGS_FILE)
+        settings = JSON.parse(File.read(SETTINGS_FILE))
+        return @settings = settings unless settings.nil?
+      end
 
       @settings = {
         'steamclient_loader.exe' => nil,
