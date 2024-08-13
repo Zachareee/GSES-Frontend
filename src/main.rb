@@ -7,20 +7,27 @@ require_relative 'win_api'
 require_relative 'window/addgame'
 require_relative 'window/settings'
 
-menubar = {
-  "File" => {
-    "Add" => Proc.new { AddGame.launch },
-    "Remove" => Proc.new { Controller.delete_game }
-  },
-  "Edit" => {
-    "Settings" => Proc.new { Settings.launch }
-  }
-}
-
 # Frontend
 class GUI
   include Glimmer::LibUI::Application
   attr_accessor :selected
+
+  @@menubar = {
+    'File' => {
+      'Add' => {
+        proc: proc { AddGame.launch }
+      },
+      'Remove' => {
+        proc: proc { |idx| Controller::Games.delete idx },
+        params: [:@selected]
+      }
+    },
+    'Edit' => {
+      'Settings' => {
+        proc: proc { Settings.launch }
+      }
+    }
+  }
 
   body do
     window_menu
@@ -35,15 +42,15 @@ class GUI
   end
 
   def window_menu
-    menu 'File' do
-      menu_item 'Add' do
-        on_clicked do
-          AddGame.launch
-        end
-      end
-      menu_item 'Remove' do
-        on_clicked do
-          Controller.delete_game @selected
+    @@menubar.each do |key, value|
+      menu key do
+        value.each do |menuitem, action|
+          menu_item menuitem do
+            on_clicked do
+              action[:proc].call(instance_variable_get(action[:params][0])) unless action[:params].nil?
+              action[:proc].call if action[:params].nil?
+            end
+          end
         end
       end
     end
@@ -55,12 +62,13 @@ class GUI
       text_column 'Game name'
       text_column 'Path'
 
-      cell_rows Controller.load_games
+      cell_rows Controller::Games.load
+
+      on_row_double_clicked do |_t, row|
+        Controller::Games.run row
+      end
 
       selection <=> [self, :selected]
-      on_row_double_clicked do |_t, row|
-        Controller.run_game row
-      end
     end
   end
 end
