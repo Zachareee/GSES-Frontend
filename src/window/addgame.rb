@@ -15,7 +15,7 @@ class AddGame
         customform
         button 'Accept' do
           on_clicked do
-            Controller.save_game [@name, @file] unless @file.nil?
+            Controller::Games.save [@name, @file] unless @file.nil?
             child.destroy
           end
         end

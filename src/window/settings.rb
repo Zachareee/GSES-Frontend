@@ -1,9 +1,10 @@
 require 'glimmer-dsl-libui'
 
+# The settings window
 class Settings
   include Glimmer::LibUI::Application
   include NativeDialog::Flags
-  attr_accessor :file, :name
+  attr_accessor :settings
 
   body do
     window('Settings', 600, 400) do |child|
@@ -11,7 +12,6 @@ class Settings
         customform
         button 'Accept' do
           on_clicked do
-            Controller.save_game [@name, @file] unless @file.nil?
             child.destroy
           end
         end
@@ -20,28 +20,27 @@ class Settings
   end
 
   def customform
-    form do
-      formbox 'Game name', :name
-      file = formbox 'Filename', :file
+    Controller::Settings.load.each do |key, value|
       horizontal_box do
+        label key.to_s
+        text_field = entry do
+          text value
+        end
+
         button 'Browse' do
           on_clicked do
-            @file = browse_files
-            file.text = @file unless @file.nil?
+            file = browse_files key
+            unless file.nil?
+              text_field.text = file
+              Controller::Settings.save key, file
+            end
           end
         end
       end
     end
   end
 
-  def formbox(label, varname)
-    entry do
-      label label
-      text <=> [self, varname]
-    end
-  end
-
-  def browse_files file
+  def browse_files(file)
     dialog = NativeDialog.new("Select the #{file} file")
                          .filters({ file => file })
                          .flags OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_PATHMUSTEXIST
