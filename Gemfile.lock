@@ -25,6 +25,7 @@ GEM
       super_module (~> 1.4.1)
       text-table (>= 1.2.4, < 2.0.0)
     libui (0.1.2-x64-mingw)
+    listen (0.1.0)
     matrix (0.4.2)
     method_source (1.1.0)
     os (1.1.4)
@@ -39,6 +40,8 @@ GEM
     rake-tui (0.2.3)
       tty-prompt
     rouge (3.30.0)
+    rubymon (0.1.1)
+      listen (~> 0.1.0)
     super_module (1.4.2)
       method_source (>= 0.8.2, < 2.0.0)
     text-table (1.2.4)
@@ -59,7 +62,7 @@ PLATFORMS
 
 DEPENDENCIES
   glimmer-dsl-libui (~> 0.12.3)
-  os (~> 1.1)
+  rubymon (~> 0.1.1)
 
 BUNDLED WITH
    2.5.15

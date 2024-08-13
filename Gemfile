@@ -6,4 +6,4 @@ source "https://rubygems.org"
 
 gem "glimmer-dsl-libui", "~> 0.12.3"
 
-gem "os", "~> 1.1"
+gem "rubymon", "~> 0.1.1"

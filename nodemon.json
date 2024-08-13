@@ -1,0 +1,7 @@
+{
+    "watch": ["src"],
+    "ext": "rb",
+    "execMap": {
+        "rb": "ruby"
+    }
+}
