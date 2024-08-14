@@ -7,7 +7,7 @@ require_relative '../win_api'
 class AddGame
   include Glimmer::LibUI::Application
   include NativeDialog::Flags
-  attr_accessor :file, :name
+  attr_accessor :file, :name, :appid, :cmdline
 
   body do
     window('Add game', 600, 400) do |child|
@@ -15,7 +15,8 @@ class AddGame
         customform
         button 'Accept' do
           on_clicked do
-            Controller::Games.save [@name, @file] unless @file.nil?
+            directory = ''
+            Controller::Games.save [@appid, @name, @file, directory, @cmdline] unless @file.nil?
             child.destroy
           end
         end
@@ -25,8 +26,10 @@ class AddGame
 
   def customform
     form do
+      formbox 'AppId', :appid
       formbox 'Game name', :name
-      file = formbox 'Filename', :file
+      formbox 'Command line arguments', :cmdline
+      formbox 'Filename', :file
       horizontal_box do
         button 'Browse' do
           on_clicked do

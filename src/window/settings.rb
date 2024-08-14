@@ -22,10 +22,11 @@ class Settings
   def customform
     Controller::Settings.load.each do |key, value|
       horizontal_box do
-        label key.to_s
+        label key
         text_field = entry do
           text value
         end
+        text_field.read_only = true
 
         button 'Browse' do
           on_clicked do

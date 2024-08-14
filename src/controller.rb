@@ -4,8 +4,8 @@ require 'fileutils'
 require 'json'
 
 APPDATA_FOLDER = "#{ENV['APPDATA']}/GSES-frontend"
-CONFIG_FILE = "#{APPDATA_FOLDER}/games.txt"
-SETTINGS_FILE = "#{APPDATA_FOLDER}/settings.txt"
+CONFIG_FILE = "#{APPDATA_FOLDER}/games.json"
+SETTINGS_FILE = "#{APPDATA_FOLDER}/settings.json"
 
 # Backend
 module Controller
@@ -17,7 +17,7 @@ module Controller
       @games = []
     end
 
-    # game = [image, game name, path]
+    # game = [appid, game name, path, dir, cmdline, image]
     def self.save(gameinfo)
       @games.push(gameinfo)
     end
@@ -27,8 +27,18 @@ module Controller
     end
 
     def self.run(idx)
-      puts Settings.settings
-      `"#{@games[idx][1]}"` unless @games[idx].nil?
+      return if @games[idx].nil?
+
+      game = @games[idx]
+      settings = Settings.settings
+      args = [
+        settings['steamclient_loader.exe'],
+        settings['steamclient.dll'],
+        settings['steamclient64.dll'],
+        game[2], game[3], game[4], game[0]
+      ].map { |arg| "\"#{arg}\"" }
+
+      `#{args}`
     end
 
     def self.shutdown
