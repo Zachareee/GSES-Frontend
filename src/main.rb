@@ -62,7 +62,6 @@ class GUI
       text_column 'App ID'
       text_column 'Game name'
       text_column 'Path'
-      text_column 'Directory'
       text_column 'Command line'
 
       cell_rows Controller::Games.load

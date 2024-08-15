@@ -7,7 +7,7 @@ class Settings
   attr_accessor :settings
 
   body do
-    window('Settings', 600, 400) do |child|
+    window('Settings', 600, 400, false) do |child|
       vertical_box do
         customform
         button 'Accept' do

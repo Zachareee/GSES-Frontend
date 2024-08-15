@@ -17,7 +17,7 @@ module Controller
       @games = []
     end
 
-    # game = [appid, game name, path, dir, cmdline, image]
+    # game = [appid, game name, path, cmdline, image]
     def self.save(gameinfo)
       @games.push(gameinfo)
     end
@@ -30,13 +30,14 @@ module Controller
       return if @games[idx].nil?
 
       game = @games[idx]
-      settings = Settings.settings
+      file = game[2]
+      settings = Settings.load
       args = [
         settings['steamclient_loader.exe'],
         settings['steamclient.dll'],
         settings['steamclient64.dll'],
-        game[2], game[3], game[4], game[0]
-      ].map { |arg| "\"#{arg}\"" }
+        file, file.gsub(/\\[^\\]*$/).each(&{}), game[3], game[0]
+      ].map { |arg| "\"#{arg}\"" }.join ' '
 
       `#{args}`
     end
@@ -48,10 +49,6 @@ module Controller
 
   # Backend relating to settings
   class Settings
-    def self.settings
-      load
-    end
-
     def self.load
       return @settings unless @settings.nil?
 

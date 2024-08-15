@@ -10,13 +10,12 @@ class AddGame
   attr_accessor :file, :name, :appid, :cmdline
 
   body do
-    window('Add game', 600, 400) do |child|
+    window('Add game', 600, 400, false) do |child|
       vertical_box do
         customform
         button 'Accept' do
           on_clicked do
-            directory = ''
-            Controller::Games.save [@appid, @name, @file, directory, @cmdline] unless @file.nil?
+            Controller::Games.save [@appid, @name, @file, @cmdline] unless @file.nil?
             child.destroy
           end
         end
@@ -29,7 +28,7 @@ class AddGame
       formbox 'AppId', :appid
       formbox 'Game name', :name
       formbox 'Command line arguments', :cmdline
-      formbox 'Filename', :file
+      file = formbox 'Filename', :file
       horizontal_box do
         button 'Browse' do
           on_clicked do
